@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tableau de bord — Ville</title>
+  <link rel="preconnect" href="https://geocoding-api.open-meteo.com" />
+  <link rel="preconnect" href="https://api.open-meteo.com" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>🌍 Tableau de bord</h1>
+    <form id="search-form" autocomplete="off">
+      <div class="search-wrap">
+        <input id="city-input" type="text" placeholder="Entre une ville française (ex : Bayonne)…" aria-label="Ville" />
+        <ul id="suggestions" class="suggestions" hidden></ul>
+      </div>
+      <button type="submit">Rechercher</button>
+    </form>
+    <div id="favorites" class="favorites"></div>
+  </header>
+
+  <main id="dashboard" hidden>
+    <!-- En-tête ville -->
+    <section class="place-header">
+      <div>
+        <h2 id="place-name">—</h2>
+        <p id="place-sub" class="muted"></p>
+        <p id="updated" class="muted updated"></p>
+      </div>
+      <button id="fav-btn" class="fav-btn" title="Ajouter aux favoris">☆</button>
+    </section>
+
+    <div class="grid">
+      <!-- Météo actuelle -->
+      <article class="card" id="card-weather">
+        <h3>Météo actuelle</h3>
+        <div class="weather-now">
+          <div class="weather-main">
+            <span id="weather-icon" class="weather-icon">…</span>
+            <div>
+              <div id="temp" class="big-temp">—</div>
+              <div id="weather-desc" class="muted"></div>
+            </div>
+          </div>
+          <div id="uv-alert" class="uv-alert" hidden></div>
+          <ul class="stats">
+            <li><span>Ressenti</span><b id="feels">—</b></li>
+            <li><span>Humidité</span><b id="humidity">—</b></li>
+            <li><span>Vent</span><b id="wind">—</b></li>
+            <li><span>Rafales</span><b id="gust">—</b></li>
+            <li><span>Direction</span><b id="wdir">—</b></li>
+            <li><span>Précip.</span><b id="precip">—</b></li>
+            <li><span>UV (now)</span><b id="uv-now">—</b></li>
+            <li><span>UV (max)</span><b id="uv">—</b></li>
+            <li><span>Pression</span><b id="pressure">—</b></li>
+            <li><span>Lever</span><b id="sunrise">—</b></li>
+            <li><span>Coucher</span><b id="sunset">—</b></li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- Qualité de l'air -->
+      <article class="card" id="card-air">
+        <h3>Qualité de l'air</h3>
+        <div class="aqi-badge" id="aqi-badge">
+          <span id="aqi-value">—</span>
+          <small id="aqi-label">indice européen</small>
+        </div>
+        <ul class="stats">
+          <li><span>PM2.5</span><b id="pm25">—</b></li>
+          <li><span>PM10</span><b id="pm10">—</b></li>
+          <li><span>NO₂</span><b id="no2">—</b></li>
+          <li><span>O₃</span><b id="o3">—</b></li>
+        </ul>
+        <h4 class="sub">🌾 Pollens</h4>
+        <ul class="stats">
+          <li><span>Graminées</span><b id="p-grass">—</b></li>
+          <li><span>Bouleau</span><b id="p-birch">—</b></li>
+          <li><span>Ambroisie</span><b id="p-ragweed">—</b></li>
+          <li><span>Aulne</span><b id="p-alder">—</b></li>
+        </ul>
+      </article>
+
+      <!-- Infos ville -->
+      <article class="card" id="card-info">
+        <h3>Informations</h3>
+        <ul class="stats stats-col">
+          <li><span>Population</span><b id="population">—</b></li>
+          <li><span>Superficie</span><b id="surface">—</b></li>
+          <li><span>Densité</span><b id="density">—</b></li>
+          <li><span>Région</span><b id="region">—</b></li>
+          <li><span>Département</span><b id="departement">—</b></li>
+          <li><span>Code postal</span><b id="cp">—</b></li>
+          <li><span>Code INSEE</span><b id="insee">—</b></li>
+          <li><span>Altitude</span><b id="altitude">—</b></li>
+          <li><span>Coordonnées</span><b id="coords">—</b></li>
+        </ul>
+      </article>
+
+      <!-- Prévisions -->
+      <article class="card card-wide" id="card-forecast">
+        <h3>Prévisions (7 jours)</h3>
+        <div id="forecast" class="forecast"></div>
+      </article>
+
+      <!-- Risques naturels -->
+      <article class="card card-wide" id="card-risk">
+        <h3>⚠️ Risques naturels &amp; technologiques <small class="muted">(Géorisques)</small></h3>
+        <div id="risk" class="risk-grid"><span class="muted">—</span></div>
+      </article>
+
+      <!-- Carburants -->
+      <article class="card card-wide" id="card-fuel">
+        <h3>Carburants les moins chers <small class="muted">(stations à &lt; 15 km)</small></h3>
+        <div id="fuel" class="fuel-grid"></div>
+      </article>
+    </div>
+  </main>
+
+  <div id="status" class="status"></div>
+  <footer class="foot muted">
+    Données : Open-Meteo (météo, air, pollens) · data.economie.gouv.fr (carburants) · geo.api.gouv.fr (commune) · Géorisques (risques) — gratuites, sans clé. Aucune donnée n'est envoyée ailleurs.
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
